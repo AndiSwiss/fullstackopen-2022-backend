@@ -73,7 +73,9 @@ app.post('/api/persons', (request, response) => {
   const body = request.body
 
   // Abort if there is no valid body
-  if (!body.name) return response.status(400).json({error: 'name is missing (JSON expected)'})
+  if (!body.name || !body.number) return response.status(400).json({error: 'Name and/or number is missing (JSON expected)!'})
+  if (persons.find(p => p.name === body.name)) return response.status(400).json({error: 'Name must be unique!'})
+
 
   const person = {
     id: generateRandomId(),
