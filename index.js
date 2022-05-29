@@ -1,7 +1,11 @@
 const express = require('express')
+const morgan = require('morgan');
 const app = express()
 
 app.use(express.json())
+
+// use morgan logging: https://github.com/expressjs/morgan
+app.use(morgan('tiny'))
 
 let persons = [
   {
