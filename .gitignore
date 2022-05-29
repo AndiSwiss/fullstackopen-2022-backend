@@ -264,5 +264,4 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/intellij,react,node
 
 # Custom entries
-# Because I used shared resources, ONLY exclude the main resources:
-react-libraries*/node_modules/
+node_modules
