@@ -26,9 +26,23 @@ let persons = [
   }
 ]
 
-// GET '/' => hello world
+// GET '/' => Welcome page
 app.get('/', (request, response) => {
-  response.send('<h1>Hello</h1><p>Go to <a href="api/persons">api/persons</a>.</p>')
+  response.send('<div>' +
+    '<h1>Hello</h1>' +
+    '<ul>' +
+    '<li>All persons (RESTful API): <a href="api/persons">api/persons</a></li>' +
+    '<li>Info about persons: <a href="info">info</a></li>' +
+    '</ul>' +
+    '</div>')
+})
+
+// GET '/info' => Info about the phonebook
+app.get('/info', (request, response) => {
+  response.send(`
+  <p>Phonebook has info for ${persons.length} people</p>
+  <p>${new Date()}</p>
+  `)
 })
 
 // GET all persons
