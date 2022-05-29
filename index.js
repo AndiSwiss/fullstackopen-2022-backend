@@ -59,11 +59,13 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 // Generate a new id
-const generateId = () => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => n.id))
-    : 0
-  return maxId + 1
+const generateRandomId = () => {
+  const getRandom = () => Math.floor(Math.random() * 1_000_000_000)
+  let random = getRandom()
+  while (persons.find(person => person.id === random)) {
+    random = getRandom()
+  }
+  return random
 }
 
 // POST a new person
@@ -74,7 +76,7 @@ app.post('/api/persons', (request, response) => {
   if (!body.name) return response.status(400).json({error: 'name is missing (JSON expected)'})
 
   const person = {
-    id: generateId(),
+    id: generateRandomId(),
     name: body.name,
     number: body.number || '',
   }
