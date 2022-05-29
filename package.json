@@ -1,0 +1,20 @@
+{
+  "name": "fullstackopen-2022-backend",
+  "version": "1.0.0",
+  "description": "This is a repo for a backend for the Open University Course \"Full Stack Open\" https://fullstackopen.com/en. It is an addition to my other repo for this course: https://github.com/AndiSwiss/fullstackopen-2022.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndiSwiss/fullstackopen-2022-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndiSwiss/fullstackopen-2022-backend/issues"
+  },
+  "homepage": "https://github.com/AndiSwiss/fullstackopen-2022-backend#readme"
+}
