@@ -4,8 +4,14 @@ const app = express()
 
 app.use(express.json())
 
-// use morgan logging: https://github.com/expressjs/morgan
-app.use(morgan('tiny'))
+// Use morgan logging: https://github.com/expressjs/
+// From exercise 3.7 (Standard logging)
+//app.use(morgan('tiny'))
+
+// From exercise 3.8 (Custom logging)
+morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
+
 
 let persons = [
   {
