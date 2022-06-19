@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "set-heroku-git": "heroku git:remote -a fullstackopen-part3b-exercises",
     "build:frontend-part3": "rm -rf build && cd ../fullstackopen-2022/part3/phonebook && npm run build && cd ../../../fullstackopen-2022-backend && cp -r ../fullstackopen-2022/part3/phonebook/build ./",
-    "deploy": "npm run set-heroku-git && git push heroku HEAD:master --force",
+    "deploy": "npm run set-heroku-git && git push heroku HEAD:main",
     "deploy:full": "npm run build:frontend-part3 && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
