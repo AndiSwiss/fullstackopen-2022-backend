@@ -6,7 +6,12 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "set-heroku-git": "heroku git:remote -a fullstackopen-part3b-exercises",
+    "build:frontend-part3": "rm -rf build && cd ../fullstackopen-2022/part3/phonebook && npm run build && cd ../../../fullstackopen-2022-backend && cp -r ../fullstackopen-2022/part3/phonebook/build ./",
+    "deploy": "npm run set-heroku-git && git push heroku HEAD:main",
+    "deploy:full": "npm run build:frontend-part3 && git add . && git commit -m uibuild && npm run deploy",
+    "logs:prod": "heroku logs --tail"
   },
   "repository": {
     "type": "git",
@@ -19,6 +24,7 @@
   },
   "homepage": "https://github.com/AndiSwiss/fullstackopen-2022-backend#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.1",
     "morgan": "^1.10.0"
   },
