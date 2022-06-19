@@ -1,8 +1,17 @@
 const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan');
 const app = express()
 
 app.use(express.json())
+app.use(cors())
+
+/**
+ * Serve the production-build of the frontend in folder /build
+ * Was built from repo 'fullstackopen-2022', folder part3/lesson-code-frontend
+ */
+app.use(express.static('build'))
+
 
 // Use morgan logging: https://github.com/expressjs/
 // From exercise 3.7 (Standard logging)
@@ -36,19 +45,19 @@ let persons = [
   }
 ]
 
-// GET '/' => Welcome page
-app.get('/', (request, response) => {
+// GET '/api' => Info page about the API
+app.get('/api', (request, response) => {
   response.send('<div>' +
     '<h1>Hello</h1>' +
     '<ul>' +
-    '<li>All persons (RESTful API): <a href="api/persons">api/persons</a></li>' +
-    '<li>Info about persons: <a href="info">info</a></li>' +
+    '<li>All persons (RESTful API): <a href="api/persons">persons</a></li>' +
+    '<li>Info about persons: <a href="api/info">info</a></li>' +
     '</ul>' +
     '</div>')
 })
 
-// GET '/info' => Info about the phonebook
-app.get('/info', (request, response) => {
+// GET '/api/info' => Info about the phonebook
+app.get('/api/info', (request, response) => {
   response.send(`
   <p>Phonebook has info for ${persons.length} people</p>
   <p>${new Date()}</p>
@@ -103,8 +112,8 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-// Run app
-const PORT = 3001
+// Run app (when on heroku, the PORT is assigned from process.env.PORT)
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`)
+  console.log(`Server running at Port=${PORT}`)
 })
