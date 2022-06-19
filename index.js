@@ -115,5 +115,5 @@ app.delete('/api/persons/:id', (request, response) => {
 // Run app
 const PORT = 3001
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`)
+  console.log(`Server running at Port=${PORT}`)
 })
