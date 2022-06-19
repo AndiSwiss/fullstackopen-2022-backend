@@ -6,7 +6,7 @@ This is a repo for backends for the Open University Course "Full Stack Open" htt
 - Branch & Release `part3a-exercises-backend`: Exercises 3.1-3.8 (all exercises of **part3a**)
 - Branch & Release `part3b-exercises-backend`: Exercises 3.9-3.11 (all exercises of **part3b**) => deployed to Heroku:
   - Dashboard: https://dashboard.heroku.com/apps/fullstackopen-part3b-exercises
-  - Available at: https://dashboard.heroku.com/apps/fullstackopen-part3b-exercises/deploy/heroku-git
+  - Available at: https://fullstackopen-part3b-exercises.herokuapp.com
   - For changes:
       - Do your changes in this backend and/or in the frontend in repo https://github.com/AndiSwiss/fullstackopen-2022 in `part3/..??`
       - then use the run-config `deploy:full` => this script does a lot:
