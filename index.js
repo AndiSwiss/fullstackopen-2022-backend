@@ -112,8 +112,8 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-// Run app
-const PORT = 3001
+// Run app (when on heroku, the PORT is assigned from process.env.PORT)
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running at Port=${PORT}`)
 })
