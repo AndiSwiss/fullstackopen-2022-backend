@@ -11,7 +11,8 @@
     "build:frontend-part3": "rm -rf build && cd ../fullstackopen-2022/part3/phonebook && npm run build && cd ../../../fullstackopen-2022-backend && cp -r ../fullstackopen-2022/part3/phonebook/build ./",
     "deploy": "npm run set-heroku-git && git push heroku HEAD:main --force",
     "deploy:full": "npm run build:frontend-part3 && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "heroku-local": "heroku local"
   },
   "repository": {
     "type": "git",
