@@ -114,6 +114,8 @@ app.delete('/api/persons/:id', (request, response) => {
 
 // Run app (when on heroku, the PORT is assigned from process.env.PORT)
 const PORT = process.env.PORT || 3001
+const LOCAL_HOST_URL = process.env.LOCAL_HOST_URL
 app.listen(PORT, () => {
-  console.log(`Server running at Port=${PORT}`)
+  if (LOCAL_HOST_URL) console.log(`Server running at ${LOCAL_HOST_URL}:${PORT}`)
+  else console.log(`Server running at Port=${PORT}`)
 })
