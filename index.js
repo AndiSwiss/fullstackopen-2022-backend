@@ -58,6 +58,7 @@ app.get('/api', (request, response) => {
     '</div>')
 })
 
+
 // GET '/api/info' => Info about the phonebook
 app.get('/api/info', (request, response) => {
   Person.find({}).then(persons => response.send(`
