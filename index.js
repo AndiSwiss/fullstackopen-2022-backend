@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan');
 const app = express()
+const Person = require('./models/person')
 
 app.use(express.json())
 app.use(cors())
@@ -58,23 +60,20 @@ app.get('/api', (request, response) => {
 
 // GET '/api/info' => Info about the phonebook
 app.get('/api/info', (request, response) => {
-  response.send(`
-  <p>Phonebook has info for ${persons.length} people</p>
-  <p>${new Date()}</p>
-  `)
+  Person.find({}).then(persons => response.send(`
+    <p>Phonebook has info for ${persons.length} people</p>
+    <p>${new Date()}</p>
+  `))
 })
 
 // GET all persons
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(people => response.json(people))
 })
 
 // GET individual person
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id) // Don't forget to convert from string to Number
-  const person = persons.find(person => person.id === id)
-  if (person) response.json(person)
-  else response.status(404).end()
+  Person.findById(request.params.id).then(person => response.json(person))
 })
 
 // Generate a new id
@@ -93,16 +92,16 @@ app.post('/api/persons', (request, response) => {
 
   // Abort if there is no valid body
   if (!body.name || !body.number) return response.status(400).json({error: 'Name and/or number is missing (JSON expected)!'})
-  if (persons.find(p => p.name === body.name)) return response.status(400).json({error: 'Name must be unique!'})
 
+  // TODO: re-implement the following with the new remote MongoDB:
+  // if (persons.find(p => p.name === body.name)) return response.status(400).json({error: 'Name must be unique!'})
 
-  const person = {
-    id: generateRandomId(),
+  const person = new Person({
     name: body.name,
-    number: body.number || '',
-  }
-  persons = persons.concat(person)
-  response.json(person)
+    number: body.number,
+  })
+
+  person.save().then(savedPerson => response.json(savedPerson))
 })
 
 // DELETE a person
