@@ -12,7 +12,8 @@
     "deploy": "npm run set-heroku-git && git push heroku HEAD:main --force",
     "deploy:full": "npm run build:frontend-part3 && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
-    "heroku-local": "heroku local"
+    "heroku-local": "heroku local",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^8.20.0",
     "nodemon": "^2.0.16"
   }
 }
