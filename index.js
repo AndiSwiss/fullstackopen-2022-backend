@@ -20,32 +20,10 @@ app.use(express.static('build'))
 //app.use(morgan('tiny'))
 
 // From exercise 3.8 (Custom logging)
-morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('type', function (req, res) {
+  return JSON.stringify(req.body)
+})
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
-
-
-let persons = [
-  {
-    "id": 1,
-    "name": "Arto Hellas",
-    "number": "040-123456"
-  },
-  {
-    "id": 2,
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523"
-  },
-  {
-    "id": 3,
-    "name": "Dan Abramov",
-    "number": "12-43-234345"
-  },
-  {
-    "id": 4,
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122"
-  }
-]
 
 // GET '/api' => Info page about the API
 app.get('/api', (request, response) => {
@@ -58,37 +36,32 @@ app.get('/api', (request, response) => {
     '</div>')
 })
 
-
 // GET '/api/info' => Info about the phonebook
-app.get('/api/info', (request, response) => {
-  Person.find({}).then(persons => response.send(`
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${new Date()}</p>
-  `))
+app.get('/api/info', (request, response, next) => {
+  Person.find({})
+    .then(persons => response.send(`
+        <p>Phonebook has info for ${persons.length} people</p>
+        <p>${new Date()}</p>
+    `))
+    .catch(error => next(error))
 })
 
 // GET all persons
-app.get('/api/persons', (request, response) => {
-  Person.find({}).then(people => response.json(people))
+app.get('/api/persons', (request, response, next) => {
+  Person.find({})
+    .then(people => response.json(people))
+    .catch(error => next(error))
 })
 
 // GET individual person
-app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => response.json(person))
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => response.json(person))
+    .catch(error => next(error))
 })
 
-// Generate a new id
-const generateRandomId = () => {
-  const getRandom = () => Math.floor(Math.random() * 1_000_000_000)
-  let random = getRandom()
-  while (persons.find(person => person.id === random)) {
-    random = getRandom()
-  }
-  return random
-}
-
 // POST a new person
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   // Abort if there is no valid body
@@ -102,15 +75,38 @@ app.post('/api/persons', (request, response) => {
     number: body.number,
   })
 
-  person.save().then(savedPerson => response.json(savedPerson))
+  person.save()
+    .then(savedPerson => response.json(savedPerson))
+    .catch(error => next(error))
 })
 
 // DELETE a person
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => response.status(204).end())
+    .catch(error => next(error))
 })
+
+
+/**
+ * Answer for all other (unknown) endpoints)
+ */
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({error: 'unknown endpoint!'})
+}
+app.use(unknownEndpoint)
+
+/**
+ * Error handler middleware
+ */
+const errorHandler = (error, request, response, next) => {
+  console.log(error)
+  response.status(400).send({
+    error: error.name,
+    errorMessage: error.message
+  })
+}
+app.use(errorHandler)
 
 // Run app (when on heroku, the PORT is assigned from process.env.PORT)
 const PORT = process.env.PORT || 3001
