@@ -19,13 +19,17 @@ app.use(express.static('build'))
 // From exercise 3.7 (Standard logging)
 //app.use(morgan('tiny'))
 
-// From exercise 3.8 (Custom logging)
+/**
+ * From exercise 3.8 (Custom logging)
+ */
 morgan.token('type', function (req, res) {
   return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 
-// GET '/api' => Info page about the API
+/**
+ * GET '/api' => Info page about the API
+ */
 app.get('/api', (request, response) => {
   response.send('<div>' +
     '<h1>Hello</h1>' +
@@ -36,7 +40,9 @@ app.get('/api', (request, response) => {
     '</div>')
 })
 
-// GET '/api/info' => Info about the phonebook
+/**
+ * GET '/api/info' => Info about the phonebook
+ */
 app.get('/api/info', (request, response, next) => {
   Person.find({})
     .then(persons => response.send(`
@@ -46,21 +52,27 @@ app.get('/api/info', (request, response, next) => {
     .catch(error => next(error))
 })
 
-// GET all persons
+/**
+ * GET all persons
+ */
 app.get('/api/persons', (request, response, next) => {
   Person.find({})
     .then(people => response.json(people))
     .catch(error => next(error))
 })
 
-// GET individual person
+/**
+ * GET individual person
+ */
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => response.json(person))
     .catch(error => next(error))
 })
 
-// POST a new person
+/**
+ * POST a new person
+ */
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
@@ -80,7 +92,27 @@ app.post('/api/persons', (request, response, next) => {
     .catch(error => next(error))
 })
 
-// DELETE a person
+/**
+ * PUT: Change a person
+ */
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
+/**
+ * DELETE a person
+ */
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then(result => response.status(204).end())
@@ -108,8 +140,10 @@ const errorHandler = (error, request, response, next) => {
 }
 app.use(errorHandler)
 
-// Run app (when on heroku, the PORT is assigned from process.env.PORT)
-const PORT = process.env.PORT || 3001
+/**
+ * Run app
+ */
+const PORT = process.env.PORT
 const LOCAL_HOST_URL = process.env.LOCAL_HOST_URL
 app.listen(PORT, () => {
   if (LOCAL_HOST_URL) console.log(`Server running at ${LOCAL_HOST_URL}:${PORT}`)
