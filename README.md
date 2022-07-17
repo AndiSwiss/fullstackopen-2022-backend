@@ -11,7 +11,7 @@ LOCAL_HOST_URL=http://localhost
 Then run `heroku local` or the run-config _heroku-local_.
 
 
-## Organized in branches & releases
+## Organized in branches / tags / releases
 - Branch & Release `part3a-exercises-backend`: Exercises 3.1-3.8 (all exercises of **part3a**)
 - Branch & Release `part3b-exercises-backend`: Exercises 3.9-3.11 (all exercises of **part3b**) => deployed to Heroku:
   - Dashboard: https://dashboard.heroku.com/apps/fullstackopen-part3b-exercises
@@ -23,4 +23,5 @@ Then run `heroku local` or the run-config _heroku-local_.
           - => see scripts-section in package.json for exact commands
   - Start the web-app: `heroku open`
   - Start the app locally: `heroku local`
+- - Branch & Release `part3c-exercises-backend`: Exercises 3.12-3.18 (all exercises of **part3c**) => deployed to the same Heroku as in part3b (see above)
 
