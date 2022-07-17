@@ -1,0 +1,55 @@
+### Testing my backend
+### ==================
+###
+### See full help at:
+### https://www.jetbrains.com/help/webstorm/http-client-in-product-code-editor.html
+
+### Note: You can directly paste a curl-command => gets automatically converted to an http-request
+### and via Context Action, you can create a curl-command from an http-request
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "via IntelliJ REST client",
+  "number": "777-777777 7"
+}
+
+### Delete an entry
+DELETE http://localhost:3001/api/persons/62d3e73351ac90a6d2c370c0
+
+
+### Change number of an entry
+PUT http://localhost:3001/api/persons/62d3e76051ac90a6d2c370c6
+Content-Type: application/json
+
+{
+  "number": "7349-2"
+}
+
+
+### Change ONLY the name of an entry
+PUT http://localhost:3001/api/persons/62d3e76051ac90a6d2c370c6
+Content-Type: application/json
+
+{
+  "name": "via IntelliJ REST client - really!!"
+}
+
+
+### Change a NON-EXISTING entry
+PUT http://localhost:3001/api/persons/62b03b56b9689ea5dfed0577
+Content-Type: application/json
+
+{
+  "number": "42"
+}
+
+
+### Change an entry entry with a malformatted id, should throw an error because of malformatted object-id
+PUT http://localhost:3001/api/persons/777777777777777
+Content-Type: application/json
+
+{
+  "number": "42"
+}
+
