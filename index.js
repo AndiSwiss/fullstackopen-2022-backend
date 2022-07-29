@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const morgan = require('morgan');
+const morgan = require('morgan')
 const app = express()
 const Person = require('./models/person')
 
@@ -22,7 +22,7 @@ app.use(express.static('build'))
 /**
  * From exercise 3.8 (Custom logging)
  */
-morgan.token('type', function (req, res) {
+morgan.token('type', function (req) {
   return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
@@ -76,15 +76,19 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  // Abort if there is no valid body
-  if (!body.name || !body.number) return response.status(400).json({error: 'Name and/or number is missing (JSON expected)!'})
-
-  // TODO: re-implement the following with the new remote MongoDB:
-  // if (persons.find(p => p.name === body.name)) return response.status(400).json({error: 'Name must be unique!'})
+  // Check if person with such a name is already in the database.
+  // If that name is already present, abort and show a corresponding error-message:
+  Person.find({})
+    .then(people => {
+      if (people.find(person => person.name === body.name)) {
+        return response.status(400).json({ error: 'Name must be unique!' })
+      }
+    })
+    .catch(error => next(error))
 
   const person = new Person({
     name: body.name,
-    number: body.number,
+    number: body.number
   })
 
   person.save()
@@ -96,14 +100,13 @@ app.post('/api/persons', (request, response, next) => {
  * PUT: Change a person
  */
 app.put('/api/persons/:id', (request, response, next) => {
-  const body = request.body
+  const { name, number } = request.body
 
-  const person = {
-    name: body.name,
-    number: body.number
-  }
-
-  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+  Person.findByIdAndUpdate(
+    request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -115,7 +118,7 @@ app.put('/api/persons/:id', (request, response, next) => {
  */
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => response.status(204).end())
+    .then(() => response.status(204).end())
     .catch(error => next(error))
 })
 
@@ -124,7 +127,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
  * Answer for all other (unknown) endpoints)
  */
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({error: 'unknown endpoint!'})
+  response.status(404).send({ error: 'unknown endpoint!' })
 }
 app.use(unknownEndpoint)
 
@@ -133,12 +136,14 @@ app.use(unknownEndpoint)
  */
 const errorHandler = (error, request, response, next) => {
   console.log(error)
-  response.status(400).send({
-    error: error.name,
-    errorMessage: error.message
-  })
+
+  if (error.name === 'CastError') return response.status(400).send({ error: 'malformatted id' })
+  else if (error.name === 'ValidationError') return response.status(400).json({ error: error.message })
+
+  next(error)
 }
 app.use(errorHandler)
+
 
 /**
  * Run app
